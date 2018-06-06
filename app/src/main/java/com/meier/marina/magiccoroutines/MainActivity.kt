@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.meier.marina.magiccoroutines.data.User
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,11 +22,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.userLiveData.observe(this, Observer(::showUser))
     }
 
-    private fun showUser(user: User?) {
-        user ?: return
+    private fun showUser(users: List<User>?) {
+        users ?: return
 
-        textName.text = user.name
-        textLastName.text = user.lastName
-        Picasso.get().load(user.photoUrl).into(imagePhoto)
+        listUsers.adapter = UserAdapter(users)
+        listUsers.layoutManager = LinearLayoutManager(this)
     }
 }

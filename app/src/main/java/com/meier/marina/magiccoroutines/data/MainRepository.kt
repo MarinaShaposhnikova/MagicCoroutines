@@ -1,5 +1,6 @@
 package com.meier.marina.magiccoroutines.data
 
+import com.meier.marina.magiccoroutines.UserRandom
 import kotlin.coroutines.experimental.suspendCoroutine
 
 class MainRepository {
@@ -8,6 +9,12 @@ class MainRepository {
         return suspendCoroutine { continuation ->
             if (id.isEmpty()) continuation.resumeWithException(Exception("Id is empty"))
             else continuation.resume(getMyUser())
+        }
+    }
+
+    suspend fun getRandomUser(): User {
+        return suspendCoroutine { continuation ->
+            continuation.resume(UserRandom.getUser())
         }
     }
 
@@ -34,6 +41,7 @@ class MainRepository {
 
     private fun getMyUser(): User {
         return User(
+            95,
             "Marina",
             "Meier",
             "https://pbs.twimg.com/profile_images/509064160215183360/GE01Ht4h_400x400.jpeg")
