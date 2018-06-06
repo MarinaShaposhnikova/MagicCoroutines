@@ -17,12 +17,12 @@ androidExtensions {
 }
 
 android {
-    compileSdkVersion 'android-P'
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.meier.marina.magiccoroutines"
         minSdkVersion 21
-        targetSdkVersion 'P'
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
