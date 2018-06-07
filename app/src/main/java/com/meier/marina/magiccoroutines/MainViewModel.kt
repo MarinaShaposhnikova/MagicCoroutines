@@ -1,6 +1,5 @@
 package com.meier.marina.magiccoroutines
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.meier.marina.magiccoroutines.data.MainRepository
@@ -14,6 +13,13 @@ class MainViewModel : ViewModel() {
     private val users = mutableSetOf<User>()
 
     val userLiveData = MutableLiveData<List<User>>()
+
+    init {
+        launch(UI) {
+            users.add(mainRepository.getMyWizard())
+            userLiveData.value = users.toList()
+        }
+    }
 
     fun useLaunchCoroutines() {
         runCoroutine { runLaunchCoroutines() }

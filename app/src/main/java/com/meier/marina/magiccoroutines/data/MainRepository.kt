@@ -20,7 +20,13 @@ class MainRepository {
         }
     }
 
-    suspend fun getWand(user: User?): User {
+    suspend fun getMyWizard(): User {
+        val myUser = getUser("myId")
+
+        return getWizard(myUser)
+    }
+
+    suspend fun getWizard(user: User?): User {
         return suspendCoroutine { continuation ->
             when {
                 user == null -> continuation.resumeWithException(Exception("User is null"))
