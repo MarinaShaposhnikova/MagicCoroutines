@@ -36,8 +36,20 @@ class MainActivity : AppCompatActivity() {
             viewModel.useLaunchCoroutines()
         }
 
-        buttonPrint.setOnClickListener {
-            viewModel.printLogs()
+        buttonLaunchJoin.setOnClickListener {
+            viewModel.useLaunchJoinCoroutines()
+        }
+
+        buttonAsync.setOnClickListener {
+            viewModel.useAsyncCoroutine()
+        }
+
+        buttonAsyncMulti.setOnClickListener {
+            viewModel.useAsyncMultiCoroutine()
+        }
+
+        buttonLaunchJoinMulti.setOnClickListener{
+            viewModel.useLaunchMultiCoroutines()
         }
     }
 

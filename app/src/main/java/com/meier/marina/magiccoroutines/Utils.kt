@@ -1,5 +1,6 @@
 package com.meier.marina.magiccoroutines
 
+import android.util.Log
 import com.meier.marina.magiccoroutines.data.User
 import java.util.*
 
@@ -38,3 +39,5 @@ object UserRandom {
 }
 
 fun <E> List<E>.random(): E = get(Random().nextInt(size))
+
+fun Any?.logD() = Log.d(LOG_TAG, this?.toString() ?: "")

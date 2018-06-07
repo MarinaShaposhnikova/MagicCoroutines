@@ -14,6 +14,7 @@ class MainRepository {
     }
 
     suspend fun getRandomUser(): User {
+        delay(1000)
         return suspendCoroutine { continuation ->
             continuation.resume(UserRandom.getUser())
         }

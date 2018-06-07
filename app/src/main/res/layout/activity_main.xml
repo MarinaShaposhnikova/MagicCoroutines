@@ -16,16 +16,34 @@
         android:text="Run launch coroutines" />
 
     <Button
+        android:id="@+id/buttonLaunchJoin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Run launch join coroutines" />
+
+    <Button
+        android:id="@+id/buttonLaunchJoinMulti"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Run launch Multi join coroutines" />
+
+    <Button
         android:id="@+id/buttonOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Run one coroutine" />
 
     <Button
-        android:id="@+id/buttonPrint"
+        android:id="@+id/buttonAsync"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Print to logs" />
+        android:text="Run async coroutine" />
+
+    <Button
+        android:id="@+id/buttonAsyncMulti"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Run async multi coroutine" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listUsers"
