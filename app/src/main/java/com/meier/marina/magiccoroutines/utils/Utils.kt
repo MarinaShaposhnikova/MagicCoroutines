@@ -1,4 +1,4 @@
-package com.meier.marina.magiccoroutines
+package com.meier.marina.magiccoroutines.utils
 
 import android.util.Log
 import com.meier.marina.magiccoroutines.data.User

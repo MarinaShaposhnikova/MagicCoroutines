@@ -1,16 +1,14 @@
 package com.meier.marina.magiccoroutines
 
 import android.os.Bundle
+import android.widget.LinearLayout.VERTICAL
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.meier.marina.magiccoroutines.R.id.listUsers
 import com.meier.marina.magiccoroutines.data.User
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,30 +25,9 @@ class MainActivity : AppCompatActivity() {
 
         listUsers.adapter = adapter
         listUsers.layoutManager = LinearLayoutManager(this)
+        listUsers.addItemDecoration(DividerItemDecoration(this, VERTICAL))
 
-        buttonOne.setOnClickListener {
-            viewModel.useOneCoroutine()
-        }
-
-        buttonLaunch.setOnClickListener {
-            viewModel.useLaunchCoroutines()
-        }
-
-        buttonLaunchJoin.setOnClickListener {
-            viewModel.useLaunchJoinCoroutines()
-        }
-
-        buttonAsync.setOnClickListener {
-            viewModel.useAsyncCoroutine()
-        }
-
-        buttonAsyncMulti.setOnClickListener {
-            viewModel.useAsyncMultiCoroutine()
-        }
-
-        buttonLaunchJoinMulti.setOnClickListener{
-            viewModel.useLaunchMultiCoroutines()
-        }
+        grid.adapter = ButtonAdapter(generateGrid())
     }
 
     private fun showUser(users: List<User>?) {
@@ -58,4 +35,14 @@ class MainActivity : AppCompatActivity() {
 
         adapter.addData(users)
     }
+
+    private fun generateGrid() =
+        listOf(
+            ButtonItem("One withContext", { viewModel.useOneWithCoroutine() }),
+            ButtonItem("One launch", { viewModel.useLaunchWithCoroutines() }),
+            ButtonItem("Many launch", { viewModel.useLaunchCoroutines() }),
+            ButtonItem("Many async", { viewModel.useAsyncCoroutine() }),
+            ButtonItem("Parallel many launch", { viewModel.useLaunchParallelCoroutines() }),
+            ButtonItem("Parallel many async", { viewModel.useAsyncParallelCoroutine() })
+        )
 }

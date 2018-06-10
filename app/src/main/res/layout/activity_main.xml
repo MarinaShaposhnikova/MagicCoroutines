@@ -5,49 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="8dp"
+    android:padding="8dp"
     tools:context=".MainActivity"
     tools:ignore="HardcodedText">
 
-    <Button
-        android:id="@+id/buttonLaunch"
-        android:layout_width="wrap_content"
+    <GridView
+        android:id="@+id/grid"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Run launch coroutines" />
-
-    <Button
-        android:id="@+id/buttonLaunchJoin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Run launch join coroutines" />
-
-    <Button
-        android:id="@+id/buttonLaunchJoinMulti"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Run launch Multi join coroutines" />
-
-    <Button
-        android:id="@+id/buttonOne"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Run one coroutine" />
-
-    <Button
-        android:id="@+id/buttonAsync"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Run async coroutine" />
-
-    <Button
-        android:id="@+id/buttonAsyncMulti"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Run async multi coroutine" />
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listUsers"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
 
 </LinearLayout>

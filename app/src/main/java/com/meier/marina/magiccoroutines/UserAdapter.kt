@@ -4,10 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.meier.marina.magiccoroutines.R.id.imagePhoto
-import com.meier.marina.magiccoroutines.R.id.textLastName
-import com.meier.marina.magiccoroutines.R.id.textName
 import com.meier.marina.magiccoroutines.data.User
+import com.meier.marina.magiccoroutines.utils.CircleTransform
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_user.view.*
 
@@ -29,8 +27,9 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
             textLastName.text = user.lastName
             user.photoUrl?.let {
                 Picasso.get()
-                        .load(user.photoUrl)
-                        .into(imagePhoto)
+                    .load(user.photoUrl)
+                    .transform(CircleTransform())
+                    .into(imagePhoto)
             }
         }
     }

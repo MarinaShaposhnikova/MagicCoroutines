@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.meier.marina.magiccoroutines.data.MainRepository
 import com.meier.marina.magiccoroutines.data.User
+import com.meier.marina.magiccoroutines.utils.logD
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 
@@ -15,9 +16,13 @@ class MainViewModel : ViewModel() {
     val userLiveData = MutableLiveData<List<User>>()
 
     init {
-        launch(UI) {
-            users.add(mainRepository.getMyWizard())
-            userLiveData.value = users.toList()
+        launch(CommonPool) {
+            try {
+                users.add(mainRepository.getMyWizard())
+                userLiveData.postValue((users.toList()))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -25,24 +30,24 @@ class MainViewModel : ViewModel() {
         runCoroutine { runLaunchCoroutines() }
     }
 
-    fun useLaunchMultiCoroutines() {
-        runCoroutine { runLaunchMultiCoroutines() }
-    }
-
-    fun useLaunchJoinCoroutines() {
-        runCoroutine { runLaunchJoinCoroutines() }
+    fun useLaunchParallelCoroutines() {
+        runCoroutine { runLaunchParallelCoroutines() }
     }
 
     fun useAsyncCoroutine() {
         runCoroutine { runAsyncCoroutine() }
     }
 
-    fun useAsyncMultiCoroutine() {
-        runCoroutine { runAsyncMultiCoroutine() }
+    fun useAsyncParallelCoroutine() {
+        runCoroutine { runAsyncParallelCoroutine() }
     }
 
-    fun useOneCoroutine() {
-        runCoroutine { runOneCoroutine() }
+    fun useLaunchWithCoroutines() {
+        runCoroutine { runOneLaunchCoroutines() }
+    }
+
+    fun useOneWithCoroutine() {
+        runCoroutine { runOneWithCoroutine() }
     }
 
     private fun runCoroutine(coroutineHandler: suspend () -> Unit) = launch(UI) {
@@ -64,10 +69,10 @@ class MainViewModel : ViewModel() {
         users.add(thirdUser.await())
 
         val result = System.currentTimeMillis() - startTime
-        "Async $result".logD()
+        "Many coroutines async $result".logD()
     }
 
-    private suspend fun runAsyncMultiCoroutine() {
+    private suspend fun runAsyncParallelCoroutine() {
         val startTime = System.currentTimeMillis()
 
         val firstUser = async { mainRepository.getRandomUser() }
@@ -81,7 +86,7 @@ class MainViewModel : ViewModel() {
         users.add(thirdUser.await())
 
         val result = System.currentTimeMillis() - startTime
-        "Async multi $result".logD()
+        "Many coroutines async parallel $result".logD()
     }
 
     private suspend fun runLaunchCoroutines() {
@@ -100,10 +105,10 @@ class MainViewModel : ViewModel() {
         }.join()
 
         val result = System.currentTimeMillis() - startTime
-        "A lot of joined $result".logD()
+        "Many coroutines launch $result".logD()
     }
 
-    private suspend fun runLaunchMultiCoroutines() {
+    private suspend fun runLaunchParallelCoroutines() {
         val startTime = System.currentTimeMillis()
 
         val job = launch {
@@ -123,10 +128,10 @@ class MainViewModel : ViewModel() {
         job3.join()
 
         val result = System.currentTimeMillis() - startTime
-        "A lot of joined JOB $result".logD()
+        "Many coroutines launch parallel $result".logD()
     }
 
-    private suspend fun runOneCoroutine() {
+    private suspend fun runOneWithCoroutine() {
         val startTime = System.currentTimeMillis()
 
         withContext(CommonPool) {
@@ -135,11 +140,11 @@ class MainViewModel : ViewModel() {
             users.add(mainRepository.getRandomUser())
 
             val result = System.currentTimeMillis() - startTime
-            "One coroutine withContext $result".logD()
+            "Switching ex. thread withContext $result".logD()
         }
     }
 
-    private suspend fun runLaunchJoinCoroutines() {
+    private suspend fun runOneLaunchCoroutines() {
         val startTime = System.currentTimeMillis()
 
         launch {
@@ -148,7 +153,7 @@ class MainViewModel : ViewModel() {
             users.add(mainRepository.getRandomUser())
 
             val result = System.currentTimeMillis() - startTime
-            "One launch with join $result".logD()
+            "Create new coroutine and join $result".logD()
         }.join()
     }
 }

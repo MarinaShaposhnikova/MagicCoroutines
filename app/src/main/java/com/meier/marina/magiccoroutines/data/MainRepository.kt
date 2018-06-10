@@ -1,6 +1,6 @@
 package com.meier.marina.magiccoroutines.data
 
-import com.meier.marina.magiccoroutines.UserRandom
+import com.meier.marina.magiccoroutines.utils.UserRandom
 import kotlinx.coroutines.experimental.delay
 import kotlin.coroutines.experimental.suspendCoroutine
 
