@@ -1,5 +1,7 @@
 package com.meier.marina.magiccoroutines.data
 
+import com.meier.marina.magiccoroutines.utils.UserRandom
+import kotlinx.coroutines.experimental.delay
 import kotlin.coroutines.experimental.suspendCoroutine
 
 class MainRepository {
@@ -11,7 +13,20 @@ class MainRepository {
         }
     }
 
-    suspend fun getWand(user: User?): User {
+    suspend fun getRandomUser(): User {
+        delay(1000)
+        return suspendCoroutine { continuation ->
+            continuation.resume(UserRandom.getUser())
+        }
+    }
+
+    suspend fun getMyWizard(): User {
+        val myUser = getUser("myId")
+
+        return getWizard(myUser)
+    }
+
+    suspend fun getWizard(user: User?): User {
         return suspendCoroutine { continuation ->
             when {
                 user == null -> continuation.resumeWithException(Exception("User is null"))
@@ -34,6 +49,7 @@ class MainRepository {
 
     private fun getMyUser(): User {
         return User(
+            95,
             "Marina",
             "Meier",
             "https://pbs.twimg.com/profile_images/509064160215183360/GE01Ht4h_400x400.jpeg")
