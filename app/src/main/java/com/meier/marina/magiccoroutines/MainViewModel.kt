@@ -7,15 +7,30 @@ import com.meier.marina.magiccoroutines.data.User
 import com.meier.marina.magiccoroutines.utils.logD
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.channels.*
+import kotlin.coroutines.experimental.CoroutineContext
 
 class MainViewModel : ViewModel() {
 
     private val mainRepository = MainRepository()
     private val users = mutableSetOf<User>()
 
+    private var count = 0
+
     val userLiveData = MutableLiveData<List<User>>()
+    val countLiveData = MutableLiveData<String>()
+
+    val channel: SendChannel<Int>
 
     init {
+        channel = Channel()
+        launch(UI) {
+            channel.throttle().consumeEach {
+                "received value: $it".logD()
+                countLiveData.value = "Last value $it"
+            }
+        }
+
         launch(CommonPool) {
             try {
                 users.add(mainRepository.getMyWizard())
@@ -23,6 +38,14 @@ class MainViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    fun useThrottle() {
+        launch {
+            count++
+            "sent value: $count".logD()
+            channel.send(count)
         }
     }
 
@@ -155,5 +178,24 @@ class MainViewModel : ViewModel() {
             val result = System.currentTimeMillis() - startTime
             "Create new coroutine and join $result".logD()
         }.join()
+    }
+
+    fun <T> Channel<T>.throttle(
+        wait: Long = 1500,
+        context: CoroutineContext = DefaultDispatcher
+    ): ReceiveChannel<T> = produce(context) {
+
+        var mostRecent: T
+
+        consumeEach {
+            mostRecent = it
+
+            delay(wait)
+            while (!isEmpty) {
+                mostRecent = receive()
+
+            }
+            send(mostRecent)
+        }
     }
 }

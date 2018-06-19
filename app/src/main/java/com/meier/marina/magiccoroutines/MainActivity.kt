@@ -2,6 +2,7 @@ package com.meier.marina.magiccoroutines
 
 import android.os.Bundle
 import android.widget.LinearLayout.VERTICAL
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         viewModel.userLiveData.observe(this, Observer(::showUser))
+        viewModel.countLiveData.observe(this, Observer { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() })
 
         listUsers.adapter = adapter
         listUsers.layoutManager = LinearLayoutManager(this)
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             ButtonItem("Many launch", { viewModel.useLaunchCoroutines() }),
             ButtonItem("Many async", { viewModel.useAsyncCoroutine() }),
             ButtonItem("Parallel many launch", { viewModel.useLaunchParallelCoroutines() }),
-            ButtonItem("Parallel many async", { viewModel.useAsyncParallelCoroutine() })
+            ButtonItem("Parallel many async", { viewModel.useAsyncParallelCoroutine() }),
+            ButtonItem("Use throttle", { viewModel.useThrottle() })
         )
 }
