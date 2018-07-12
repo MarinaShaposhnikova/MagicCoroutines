@@ -105,9 +105,7 @@ class MainViewModel : ViewModel() {
 
         val thirdUser = async(BG) { mainRepository.getRandomUser() }
 
-        users.add(firstUser.await())
-        users.add(secondUser.await())
-        users.add(thirdUser.await())
+        users.addAll(awaitAll(firstUser, secondUser, thirdUser))
 
         val result = System.currentTimeMillis() - startTime
         "Many coroutines async parallel $result".logD()
@@ -147,9 +145,7 @@ class MainViewModel : ViewModel() {
             users.add(mainRepository.getRandomUser())
         }
 
-        job.join()
-        job2.join()
-        job3.join()
+        joinAll(job, job2, job3)
 
         val result = System.currentTimeMillis() - startTime
         "Many coroutines launch parallel $result".logD()
