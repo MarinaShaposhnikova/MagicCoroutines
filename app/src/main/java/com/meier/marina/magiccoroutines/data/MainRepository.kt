@@ -52,6 +52,6 @@ class MainRepository {
             95,
             "Marina",
             "Meier",
-            "https://pbs.twimg.com/profile_images/509064160215183360/GE01Ht4h_400x400.jpeg")
+            "https://avatars3.githubusercontent.com/u/18406544?s=460&v=4")
     }
 }

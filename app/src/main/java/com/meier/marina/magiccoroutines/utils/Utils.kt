@@ -43,9 +43,3 @@ object UserRandom {
 fun <E> List<E>.random(): E = get(Random().nextInt(size))
 
 fun Any?.logD() = Log.d(LOG_TAG, this?.toString() ?: "")
-
-private val parallelism = (Runtime.getRuntime().availableProcessors() - 1).coerceAtLeast(1)
-val BG by lazy {
-    if (parallelism > 1) DefaultDispatcher
-    else newSingleThreadContext("BgThread")
-}

@@ -6,10 +6,10 @@ import com.meier.marina.magiccoroutines.data.MainRepository
 import com.meier.marina.magiccoroutines.data.User
 import com.meier.marina.magiccoroutines.utils.BG
 import com.meier.marina.magiccoroutines.utils.logD
+import com.meier.marina.magiccoroutines.utils.throttle
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.*
-import kotlin.coroutines.experimental.CoroutineContext
 
 class MainViewModel : ViewModel() {
 
@@ -179,24 +179,5 @@ class MainViewModel : ViewModel() {
             val result = System.currentTimeMillis() - startTime
             "Create new coroutine and join $result".logD()
         }.join()
-    }
-
-    fun <T> Channel<T>.throttle(
-        wait: Long = 1500,
-        context: CoroutineContext = DefaultDispatcher
-    ): ReceiveChannel<T> = produce(context) {
-
-        var mostRecent: T
-
-        consumeEach {
-            mostRecent = it
-
-            delay(wait)
-            while (!isEmpty) {
-                mostRecent = receive()
-
-            }
-            send(mostRecent)
-        }
     }
 }
