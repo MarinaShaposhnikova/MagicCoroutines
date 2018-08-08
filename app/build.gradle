@@ -40,7 +40,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Coroutines
-    def coroutinesVersion = "0.22.5"
+    def coroutinesVersion = "0.24.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
@@ -48,9 +48,9 @@ dependencies {
     // AndroidX
     def lifecycle_version = "2.0.0-alpha1"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.appcompat:appcompat:1.0.0-alpha1"
-    implementation "androidx.constraintlayout:constraintlayout:1.1.0"
-    implementation "androidx.recyclerview:recyclerview:1.0.0-alpha3"
+    implementation "androidx.appcompat:appcompat:1.0.0-rc01"
+    implementation "androidx.constraintlayout:constraintlayout:1.1.2"
+    implementation "androidx.recyclerview:recyclerview:1.0.0-rc01"
 
 
     // Image
