@@ -2,6 +2,8 @@ package com.meier.marina.magiccoroutines.utils
 
 import android.util.Log
 import com.meier.marina.magiccoroutines.data.User
+import kotlinx.coroutines.experimental.DefaultDispatcher
+import kotlinx.coroutines.experimental.newSingleThreadContext
 import java.util.*
 
 const val LOG_TAG = "marina_meier"

@@ -4,11 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.meier.marina.magiccoroutines.data.MainRepository
 import com.meier.marina.magiccoroutines.data.User
+import com.meier.marina.magiccoroutines.utils.BG
 import com.meier.marina.magiccoroutines.utils.logD
+import com.meier.marina.magiccoroutines.utils.throttle
 import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.*
-import kotlin.coroutines.experimental.CoroutineContext
 
 class MainViewModel : ViewModel() {
 
@@ -25,13 +26,13 @@ class MainViewModel : ViewModel() {
     init {
         channel = Channel()
         launch(UI) {
-            channel.throttle().consumeEach {
+            channel.throttle(context = BG).consumeEach {
                 "received value: $it".logD()
                 countLiveData.value = "Last value $it"
             }
         }
 
-        launch(CommonPool) {
+        launch(BG) {
             try {
                 users.add(mainRepository.getMyWizard())
                 userLiveData.postValue((users.toList()))
@@ -42,7 +43,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun useThrottle() {
-        launch {
+        launch(BG) {
             count++
             "sent value: $count".logD()
             channel.send(count)
@@ -82,13 +83,13 @@ class MainViewModel : ViewModel() {
     private suspend fun runAsyncCoroutine() {
         val startTime = System.currentTimeMillis()
 
-        val firstUser = async { mainRepository.getRandomUser() }
+        val firstUser = async(BG) { mainRepository.getRandomUser() }
         users.add(firstUser.await())
 
-        val secondUser = async { mainRepository.getRandomUser() }
+        val secondUser = async(BG) { mainRepository.getRandomUser() }
         users.add(secondUser.await())
 
-        val thirdUser = async { mainRepository.getRandomUser() }
+        val thirdUser = async(BG) { mainRepository.getRandomUser() }
         users.add(thirdUser.await())
 
         val result = System.currentTimeMillis() - startTime
@@ -98,11 +99,11 @@ class MainViewModel : ViewModel() {
     private suspend fun runAsyncParallelCoroutine() {
         val startTime = System.currentTimeMillis()
 
-        val firstUser = async { mainRepository.getRandomUser() }
+        val firstUser = async(BG) { mainRepository.getRandomUser() }
 
-        val secondUser = async { mainRepository.getRandomUser() }
+        val secondUser = async(BG) { mainRepository.getRandomUser() }
 
-        val thirdUser = async { mainRepository.getRandomUser() }
+        val thirdUser = async(BG) { mainRepository.getRandomUser() }
 
         users.addAll(awaitAll(firstUser, secondUser, thirdUser))
 
@@ -113,15 +114,15 @@ class MainViewModel : ViewModel() {
     private suspend fun runLaunchCoroutines() {
         val startTime = System.currentTimeMillis()
 
-        launch {
+        launch(BG) {
             users.add(mainRepository.getRandomUser())
         }.join()
 
-        launch {
+        launch(BG) {
             users.add(mainRepository.getRandomUser())
         }.join()
 
-        launch {
+        launch(BG) {
             users.add(mainRepository.getRandomUser())
         }.join()
 
@@ -132,15 +133,15 @@ class MainViewModel : ViewModel() {
     private suspend fun runLaunchParallelCoroutines() {
         val startTime = System.currentTimeMillis()
 
-        val job = launch {
+        val job = launch(BG) {
             users.add(mainRepository.getRandomUser())
         }
 
-        val job2 = launch {
+        val job2 = launch(BG) {
             users.add(mainRepository.getRandomUser())
         }
 
-        val job3 = launch {
+        val job3 = launch(BG) {
             users.add(mainRepository.getRandomUser())
         }
 
@@ -153,7 +154,7 @@ class MainViewModel : ViewModel() {
     private suspend fun runOneWithCoroutine() {
         val startTime = System.currentTimeMillis()
 
-        withContext(CommonPool) {
+        withContext(BG) {
             users.add(mainRepository.getRandomUser())
             users.add(mainRepository.getRandomUser())
             users.add(mainRepository.getRandomUser())
@@ -166,7 +167,7 @@ class MainViewModel : ViewModel() {
     private suspend fun runOneLaunchCoroutines() {
         val startTime = System.currentTimeMillis()
 
-        launch {
+        launch(BG) {
             users.add(mainRepository.getRandomUser())
             users.add(mainRepository.getRandomUser())
             users.add(mainRepository.getRandomUser())
@@ -174,24 +175,5 @@ class MainViewModel : ViewModel() {
             val result = System.currentTimeMillis() - startTime
             "Create new coroutine and join $result".logD()
         }.join()
-    }
-
-    fun <T> Channel<T>.throttle(
-        wait: Long = 1500,
-        context: CoroutineContext = DefaultDispatcher
-    ): ReceiveChannel<T> = produce(context) {
-
-        var mostRecent: T
-
-        consumeEach {
-            mostRecent = it
-
-            delay(wait)
-            while (!isEmpty) {
-                mostRecent = receive()
-
-            }
-            send(mostRecent)
-        }
     }
 }
